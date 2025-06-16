@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Comment } from '../types/Comment';
 import cn from 'classnames';
+import { useForm } from '../hooks/useForm';
 
 type Props = {
   onCommentAdd?: (
@@ -16,73 +17,19 @@ export const NewCommentForm: React.FC<Props> = ({
   postId,
   isCommentsLoading,
 }) => {
-  const [authorName, setAuthorName] = useState('');
-  const [isAuthorNameError, setIsAuthorNameError] = useState(false);
-
-  const [authorEmail, setAuthorEmail] = useState('');
-  const [isAuthorEmailError, setIsAuthorEmailError] = useState(false);
-
-  const [commentBody, setCommentBody] = useState('');
-  const [isCommentBodyError, setIsCommentBodyError] = useState(false);
-
-  const handleAuthorNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setIsAuthorNameError(false);
-    setAuthorName(event.target.value);
-  };
-
-  const handleAuthorEmailChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setIsAuthorEmailError(false);
-    setAuthorEmail(event.target.value);
-  };
-
-  const handleCommentBodyChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    setIsCommentBodyError(false);
-    setCommentBody(event.target.value);
-  };
-
-  const handleReset = () => {
-    setAuthorName('');
-    setIsAuthorNameError(false);
-    setAuthorEmail('');
-    setIsAuthorEmailError(false);
-    setCommentBody('');
-    setIsCommentBodyError(false);
-  };
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const isNameValid = !!authorName.trim();
-    const isEmailValid = !!authorEmail.trim();
-    const isBodyValid = !!commentBody.trim();
-
-    setIsAuthorNameError(!isNameValid);
-    setIsAuthorEmailError(!isEmailValid);
-    setIsCommentBodyError(!isBodyValid);
-
-    if (!isNameValid || !isEmailValid || !isBodyValid) {
-      return;
-    }
-
-    if (postId !== undefined) {
-      onCommentAdd?.(postId, {
-        name: authorName,
-        email: authorEmail,
-        body: commentBody,
-      });
-
-      setIsAuthorNameError(false);
-      setIsAuthorEmailError(false);
-      setCommentBody('');
-      setIsCommentBodyError(false);
-    }
-  };
+  const {
+    authorName,
+    isAuthorNameError,
+    authorEmail,
+    isAuthorEmailError,
+    commentBody,
+    isCommentBodyError,
+    handleAuthorNameChange,
+    handleAuthorEmailChange,
+    handleCommentBodyChange,
+    handleSubmit,
+    handleReset,
+  } = useForm(postId, onCommentAdd);
 
   return (
     <form data-cy="NewCommentForm" onSubmit={handleSubmit}>

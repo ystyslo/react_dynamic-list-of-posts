@@ -3,7 +3,7 @@ import { Post } from '../types/Post';
 import cn from 'classnames';
 
 type Props = {
-  posts: Post[];
+  posts: Post[] | null;
   selectedPost?: Post | null;
   onPostSelect?: (post: Post | null) => void;
 };
@@ -28,7 +28,7 @@ export const PostsList: React.FC<Props> = ({
         </thead>
 
         <tbody>
-          {posts.map(post => (
+          {posts?.map(post => (
             <tr data-cy="Post" key={post.id}>
               <td data-cy="PostId">{post.id}</td>
 

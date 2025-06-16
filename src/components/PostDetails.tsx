@@ -1,36 +1,26 @@
 import React from 'react';
 import { Loader } from './Loader';
 import { NewCommentForm } from './NewCommentForm';
-import { Comment } from '../types/Comment';
 import { Post } from '../types/Post';
+import { useComments } from '../hooks/useComments';
 
 type Props = {
   post: Post | null;
-  comments: Comment[] | null;
-  isCommentsError?: boolean;
-  isCommentsLoading?: boolean;
-  onCommentDelete?: (commentId: number) => void;
-  addComment?: (
-    postId: number,
-    commentData: Omit<Comment, 'id' | 'postId'>,
-  ) => void;
-  isNewCommentFormVisible?: boolean;
-  setIsNewCommentFormVisible?: (status: boolean) => void;
 };
 
-export const PostDetails: React.FC<Props> = ({
-  post,
-  comments,
-  isCommentsError,
-  isCommentsLoading,
-  onCommentDelete,
-  addComment,
-  isNewCommentFormVisible,
-  setIsNewCommentFormVisible,
-}) => {
-  const isEmpty = comments && !comments.length;
-  const isComments = comments && !!comments.length;
-  const isButtonShown = comments && !isNewCommentFormVisible;
+export const PostDetails: React.FC<Props> = ({ post }) => {
+  const {
+    comments,
+    isCommentsLoading,
+    isCommentsError,
+    isEmpty,
+    isComments,
+    isButtonShown,
+    isNewCommentFormVisible,
+    setIsNewCommentFormVisible,
+    addComment,
+    deleteComment,
+  } = useComments(post);
 
   return (
     <div className="content" data-cy="PostDetails">
@@ -59,7 +49,7 @@ export const PostDetails: React.FC<Props> = ({
             <div className="block">
               <p className="title is-4">Comments:</p>
 
-              {comments.map(comment => (
+              {comments?.map(comment => (
                 <article
                   key={comment.id}
                   className="message is-small"
@@ -75,7 +65,7 @@ export const PostDetails: React.FC<Props> = ({
                       type="button"
                       className="delete is-small"
                       aria-label="delete"
-                      onClick={() => onCommentDelete?.(comment.id)}
+                      onClick={() => deleteComment?.(comment.id)}
                     >
                       delete button
                     </button>
