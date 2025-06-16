@@ -22,7 +22,7 @@ export const useComments = (selectedPost: Post | null) => {
     setIsCommentsError(false);
     setIsCommentsLoading(true);
     setComments(null);
-    ClientAPI.getComments(selectedPost ? selectedPost.id : null)
+    ClientAPI.getComments(selectedPost.id)
       .then(setComments)
       .catch(() => {
         setIsCommentsError(true);
